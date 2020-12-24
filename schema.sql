@@ -19,7 +19,8 @@ CREATE TABLE Incident (
   eco_loss int DEFAULT 0,
   location varchar(60) NOT NULL,
   name varchar(40),
-  type int
+  type int,
+  suspect int
 );
 
 CREATE TABLE Person (
@@ -32,7 +33,7 @@ CREATE TABLE Person (
 
 CREATE TABLE Casualty (
   id int PRIMARY KEY,
-  deg_of_loss varchar(10) NOT NULL
+  deg_of_loss int DEFAULT 1
 );
 
 CREATE TABLE Government_Representative (
@@ -48,6 +49,11 @@ CREATE TABLE Citizen (
   password varchar(60) NOT NULL,
   data_of_join datetime DEFAULT (CURRENT_TIMESTAMP()),
   trust_level int NOT NULL DEFAULT 0
+);
+
+CREATE TABLE Criminal (
+    id int PRIMARY KEY,
+    no_of_crimes int DEFAULT 1
 );
 
 CREATE TABLE Report (
@@ -67,11 +73,15 @@ CREATE TABLE Casualty_Incident (
 
 ALTER TABLE Incident ADD FOREIGN KEY (type) REFERENCES Disaster (id) ON DELETE SET NULL ON UPDATE CASCADE;
 
+ALTER TABLE Incident ADD FOREIGN KEY (suspect) REFERENCES Criminal (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
 ALTER TABLE Casualty ADD FOREIGN KEY (id) REFERENCES Person (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Government_Representative ADD FOREIGN KEY (id) REFERENCES Person (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Citizen ADD FOREIGN KEY (id) REFERENCES Person (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Criminal ADD FOREIGN KEY (id) REFERENCES Person (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Report ADD FOREIGN KEY (incident_id) REFERENCES Incident (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
