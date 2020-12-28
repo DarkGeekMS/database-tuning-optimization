@@ -1,0 +1,57 @@
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Table Name & Row Count & Primary Key & Indexes & FK  \\ [0.5ex] 
+ \hline\hline
+ Disaster & 200000 & id & 2 & 0 \\ 
+ \hline
+ Incident & 199998 & id & 3 & 2 \\
+ \hline
+ Person & 200000 & id & 1 & 0 \\
+ \hline
+ Citizen & 50000 & id & 1 & 1 \\
+ \hline
+ Government Representative & 50000 & id & 1 & 1 \\
+ \hline
+ Casualty & 49999 & id & 1 & 1 \\
+ \hline
+ Criminal & 50000 & id & 1 & 1 \\
+ \hline
+ Report & 199997 & id & 4 & 3 \\
+ \hline
+ Casualty\_Incident & 199996 & (incident\_id, casualty\_id) & 2 & 2 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Database Filling Report Part 1}
+\label{table:1}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c | c | c||} 
+ \hline
+ Table Name & Identity Column & Max Row Size (Bytes) \\ [0.5ex] 
+ \hline\hline
+ Disaster & YES & 131118 \\ 
+ \hline
+ Incident & YES & 65663 \\
+ \hline
+ Person & YES & 109 \\
+ \hline
+ Citizen & NO & 116 \\
+ \hline
+ Government Representative & NO & 112 \\
+ \hline
+ Casualty & NO & 8 \\
+ \hline
+ Criminal & NO & 8 \\
+ \hline
+ Report & YES & 65559 \\
+ \hline
+ Casualty\_Incident & NO & 8 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Database Filling Report Part 2}
+\label{table:2}
+\end{table}
