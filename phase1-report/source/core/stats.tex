@@ -2,25 +2,25 @@
 \centering
 \begin{tabular}{||c | c | c | c | c||} 
  \hline
- Table Name & Row Count & Primary Key & Indexes & FK  \\ [0.5ex] 
+ Table Name & Row Count & Main Key & Indexes & FK  \\ [0.5ex] 
  \hline\hline
- Disaster & 200000 & id & 2 & 0 \\ 
+ Disaster & 200000 & YES & 2 & 0 \\ 
  \hline
- Incident & 199998 & id & 3 & 2 \\
+ Incident & 199998 & YES & 3 & 2 \\
  \hline
- Person & 200000 & id & 1 & 0 \\
+ Person & 200000 & YES & 1 & 0 \\
  \hline
- Citizen & 50000 & id & 1 & 1 \\
+ Citizen & 50000 & YES & 1 & 1 \\
  \hline
- Government Representative & 50000 & id & 1 & 1 \\
+ Government Representative & 50000 & YES & 1 & 1 \\
  \hline
- Casualty & 49999 & id & 1 & 1 \\
+ Casualty & 49999 & YES & 1 & 1 \\
  \hline
- Criminal & 50000 & id & 1 & 1 \\
+ Criminal & 50000 & YES & 1 & 1 \\
  \hline
- Report & 199997 & id & 4 & 3 \\
+ Report & 199997 & YES & 4 & 3 \\
  \hline
- Casualty\_Incident & 199996 & (incident\_id, casualty\_id) & 2 & 2 \\ [1ex] 
+ Casualty\_Incident & 199996 & YES \emph{(Composite)} & 2 & 2 \\ [1ex] 
  \hline
 \end{tabular}
 \caption{Database Filling Report Part 1}

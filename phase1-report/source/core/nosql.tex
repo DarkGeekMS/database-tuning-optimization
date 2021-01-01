@@ -1,0 +1,7 @@
+For \emph{NoSQL} implementation, we use \emph{MongoDB}. The $9$ relations are represented by $2$ collection as follows :
+\begin{enumerate}
+    \item \textbf{Reports} collection : This collection contains documents that describe the report information and the related incident. \emph{Incident} and \emph{Disaster} tables are embedded inside it. Also, it links to \textbf{Persons} collection using \emph{person id}.
+    \item \textbf{Persons} collection : This collection contains documents that describe the person information for each of \emph{citizen}, \emph{criminal}, \emph{government representative} and \emph{casualty}. All of them share some basic attributes and differ in others.
+\end{enumerate}
+
+The database is designed in such way, in order to optimize both performance \emph{(number of queries)} and storage \emph{(redundant data and document size)}. We have only $2$ collections, which significantly reduces the number of queries \emph{(disk accesses)}, meanwhile the only redundant data that can exist is that of the \emph{disaster} table, which is relatively small in a \emph{NoSQL DBMS}. Also, we utilize the power of \emph{NoSQL}, so that all person types are combined into a single collection, even if they can have some different fields \emph{(which is feasible in NoSQL)}.
