@@ -18,6 +18,7 @@ with open('generated-sql-scripts/disaster_fill.sql', 'w+') as f:
                 query += f"('{data_list[id+sub_id][0]}', '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][3]});\n"
             else:
                 query += f"('{data_list[id+sub_id][0]}', '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][3]}),\n"
+        f.write(query)
             
 # autofill Incident table
 with open('data-pickles/incident.pkl', 'rb') as f:
@@ -34,6 +35,7 @@ with open('generated-sql-scripts/incident_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
                     '{data_list[id+sub_id][3]}', {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5]}', \
                         '{data_list[id+sub_id][6]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]}),\n"
+        f.write(query)
 
 # autofill Person table
 with open('data-pickles/person.pkl', 'rb') as f:
@@ -46,6 +48,7 @@ with open('generated-sql-scripts/person_fill.sql', 'w+') as f:
                 query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3]}');\n"
             else:
                 query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3]}'),\n"
+        f.write(query)
 
 # autofill Casualty table
 with open('data-pickles/casualty.pkl', 'rb') as f:
@@ -58,6 +61,7 @@ with open('generated-sql-scripts/casualty_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
+        f.write(query)
 
 # autofill Government_Representative table
 with open('data-pickles/govn_rep.pkl', 'rb') as f:
@@ -70,6 +74,7 @@ with open('generated-sql-scripts/govn_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}');\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}'),\n"
+        f.write(query)
 
 # autofill Citizen table
 with open('data-pickles/citizen.pkl', 'rb') as f:
@@ -82,6 +87,7 @@ with open('generated-sql-scripts/citizen_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][4]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][4]}),\n"
+        f.write(query)
 
 # autofill Criminal table
 with open('data-pickles/criminal.pkl', 'rb') as f:
@@ -94,6 +100,7 @@ with open('generated-sql-scripts/criminal_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
+        f.write(query)
 
 # autofill Report table
 with open('data-pickles/report.pkl', 'rb') as f:
@@ -106,8 +113,9 @@ with open('generated-sql-scripts/report_fill.sql', 'w+') as f:
                 query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]});\n"
             else:
                 query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]}),\n"
+        f.write(query)
 
-# autofill Criminal table
+# autofill Casualty_Incident table
 with open('data-pickles/casualty_incident.pkl', 'rb') as f:
     data_list = pickle.load(f)
 with open('generated-sql-scripts/casualty_incident_fill.sql', 'w+') as f:
@@ -118,3 +126,4 @@ with open('generated-sql-scripts/casualty_incident_fill.sql', 'w+') as f:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
+        f.write(query)

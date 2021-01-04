@@ -46,7 +46,7 @@ with open('data-pickles/person.pkl', 'wb') as f:
 # generate Casualty data
 with open('data-pickles/casualty.pkl', 'wb') as f:
     casualty_data = list()
-    unique_ids = list(range(0,int(record_per_table/4)-1))
+    unique_ids = list(range(0,int(record_per_table/4)))
     for id in tqdm(range(int(record_per_table/4))):
         idx = random.choice(unique_ids)
         casualty_data.append([idx, random.randint(1,10)])
@@ -56,7 +56,7 @@ with open('data-pickles/casualty.pkl', 'wb') as f:
 # generate Government_Representative data
 with open('data-pickles/govn_rep.pkl', 'wb') as f:
     govn_rep_data = list()
-    unique_ids = list(range(int(record_per_table/4),2*int(record_per_table/4)-1))
+    unique_ids = list(range(int(record_per_table/4),2*int(record_per_table/4)))
     for id in tqdm(range(int(record_per_table/4))):
         idx = random.choice(unique_ids)
         govn_rep_data.append([idx, generate_slug(2), generate_slug(3)])
@@ -66,7 +66,7 @@ with open('data-pickles/govn_rep.pkl', 'wb') as f:
 # generate Citizen data
 with open('data-pickles/citizen.pkl', 'wb') as f:
     citizen_data = list()
-    unique_ids = list(range(2*int(record_per_table/4),3*int(record_per_table/4)-1))
+    unique_ids = list(range(2*int(record_per_table/4),3*int(record_per_table/4)))
     for id in tqdm(range(int(record_per_table/4))):
         idx = random.choice(unique_ids)
         citizen_data.append([idx, generate_slug(2), generate_slug(3), random.randint(1,10)])
@@ -76,7 +76,7 @@ with open('data-pickles/citizen.pkl', 'wb') as f:
 # generate Criminal data
 with open('data-pickles/criminal.pkl', 'wb') as f:
     criminal_data = list()
-    unique_ids = list(range(3*int(record_per_table/4),record_per_table-1))
+    unique_ids = list(range(3*int(record_per_table/4),record_per_table))
     for id in tqdm(range(int(record_per_table/4))):
         idx = random.choice(unique_ids)
         criminal_data.append([idx, random.randint(1,20)])
