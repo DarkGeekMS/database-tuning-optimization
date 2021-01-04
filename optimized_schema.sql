@@ -1,0 +1,134 @@
+CREATE DATABASE Optim_Disasters_DB;
+
+USE Optim_Disasters_DB;
+
+CREATE TABLE Disaster (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(40) UNIQUE NOT NULL,
+    possible_causes MEDIUMINT,
+    precautions MEDIUMINT,
+    no_of_prev_occur MEDIUMINT DEFAULT 0
+);
+
+CREATE TABLE Causes (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    corpus TEXT NOT NULL
+);
+
+CREATE TABLE Precautions (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    corpus TEXT NOT NULL
+);
+
+CREATE TABLE Incident (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    inc_date DATE NOT NULL,
+    description MEDIUMINT,
+    eco_loss INT DEFAULT 0,
+    location CHAR(60) NOT NULL,
+    name CHAR(40) NOT NULL,
+    type MEDIUMINT NOT NULL,
+    suspect MEDIUMINT
+);
+
+CREATE TABLE Descriptions (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    corpus TEXT NOT NULL
+);
+
+CREATE TABLE Casualty (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(40) NOT NULL,
+    age TINYINT NOT NULL,
+    gender BIT NOT NULL,
+    address CHAR(60) NOT NULL,
+    deg_of_loss BIT(4) DEFAULT 1
+);
+
+CREATE TABLE Government_Representative (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(40) NOT NULL,
+    age TINYINT NOT NULL,
+    gender BIT NOT NULL,
+    address CHAR(60) NOT NULL,
+    credentials MEDIUMINT NOT NULL,
+    data_of_join DATETIME DEFAULT (CURRENT_TIMESTAMP())
+);
+
+CREATE TABLE Govn_Rep_Credentials (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(40) NOT NULL,
+    password VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE Citizen (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(40) NOT NULL,
+    age TINYINT NOT NULL,
+    gender BIT NOT NULL,
+    address CHAR(60) NOT NULL,
+    credentials MEDIUMINT NOT NULL,
+    data_of_join DATETIME DEFAULT (CURRENT_TIMESTAMP()),
+    trust_level BIT(4) NOT NULL DEFAULT 0
+);
+
+CREATE TABLE Citizen_Credentials (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(40) NOT NULL,
+    password VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE Criminal (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(40) NOT NULL,
+    age TINYINT NOT NULL,
+    gender BIT NOT NULL,
+    address CHAR(60) NOT NULL,
+    no_of_crimes TINYINT DEFAULT 1
+);
+
+CREATE TABLE Report (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    content MEDIUMINT,
+    report_date DATETIME DEFAULT (CURRENT_TIMESTAMP()),
+    incident_id MEDIUMINT NOT NULL,
+    govn_id MEDIUMINT,
+    citizen_id MEDIUMINT NOT NULL
+);
+
+CREATE TABLE Report_Content (
+    id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+    corpus TEXT NOT NULL
+);
+
+CREATE TABLE Casualty_Incident (
+    incident_id MEDIUMINT NOT NULL,
+    casualty_id MEDIUMINT NOT NULL,
+    PRIMARY KEY (incident_id, casualty_id)
+);
+
+ALTER TABLE Disaster ADD FOREIGN KEY (possible_causes) REFERENCES Causes (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Disaster ADD FOREIGN KEY (precautions) REFERENCES Precautions (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Incident ADD FOREIGN KEY (type) REFERENCES Disaster (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Incident ADD FOREIGN KEY (suspect) REFERENCES Criminal (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Incident ADD FOREIGN KEY (description) REFERENCES Descriptions (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Government_Representative ADD FOREIGN KEY (credentials) REFERENCES Govn_Rep_Credentials (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Citizen ADD FOREIGN KEY (credentials) REFERENCES Citizen_Credentials (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Report ADD FOREIGN KEY (incident_id) REFERENCES Incident (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Report ADD FOREIGN KEY (govn_id) REFERENCES Government_Representative (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE Report ADD FOREIGN KEY (citizen_id) REFERENCES Citizen (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Report ADD FOREIGN KEY (content) REFERENCES Report_Content (id) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE Casualty_Incident ADD FOREIGN KEY (incident_id) REFERENCES Incident (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Casualty_Incident ADD FOREIGN KEY (casualty_id) REFERENCES Casualty (id) ON DELETE CASCADE ON UPDATE CASCADE;

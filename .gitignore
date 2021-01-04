@@ -1,0 +1,5 @@
+# database filling folders
+database-fill/data-pickles/
+database-fill/sql-scripts/
+database-fill/optimized-sql-scripts/
+database-fill/nosql-collections/
