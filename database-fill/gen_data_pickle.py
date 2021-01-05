@@ -7,12 +7,13 @@ import names
 import random
 import pickle
 from tqdm import tqdm
+import sys
 
 # initialize random document generator
 gen = DocumentGenerator()
 
 # number of records per table
-record_per_table = 1000000
+record_per_table = int(sys.argv[1])
 
 # generate Disaster data
 with open('data-pickles/disaster.pkl', 'wb') as f:

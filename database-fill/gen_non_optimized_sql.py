@@ -14,10 +14,13 @@ with open('sql-scripts/disaster_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
         query = "INSERT INTO Disaster \n(name, possible_causes, precautions, no_of_prev_occur) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
-                query += f"('{data_list[id+sub_id][0]}', '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][3]});\n"
+            name = data_list[id+sub_id][0][:40].replace("'", "")
+            causes = data_list[id+sub_id][1].replace("'", "")
+            precautions = data_list[id+sub_id][2].replace("'", "")
+            if sub_id == 999:
+                query += f"('{name}', '{causes}', '{precautions}', {data_list[id+sub_id][3]});\n"
             else:
-                query += f"('{data_list[id+sub_id][0]}', '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][3]}),\n"
+                query += f"('{name}', '{causes}', '{precautions}', {data_list[id+sub_id][3]}),\n"
         f.write(query)
             
 # autofill Incident table
@@ -27,13 +30,15 @@ with open('sql-scripts/incident_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
         query = "INSERT INTO Incident (year, month, day, description, eco_loss, location, name, type, suspect) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
+            name = data_list[id+sub_id][5][:40].replace("'", "")
+            description = data_list[id+sub_id][3].replace("'", "")
+            if sub_id == 999:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
-                    '{data_list[id+sub_id][3]}', {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5]}', \
+                        '{description}', {data_list[id+sub_id][4]}, '{name}', \
                         '{data_list[id+sub_id][6]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
-                    '{data_list[id+sub_id][3]}', {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5]}', \
+                        '{description}', {data_list[id+sub_id][4]}, '{name}', \
                         '{data_list[id+sub_id][6]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]}),\n"
         f.write(query)
 
@@ -44,20 +49,22 @@ with open('sql-scripts/person_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
         query = "INSERT INTO Person \n(name, age, gender, address) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
-                query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3]}');\n"
+            if sub_id == 999:
+                query += f"('{data_list[id+sub_id][0][:40]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3][:60]}');\n"
             else:
-                query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3]}'),\n"
+                query += f"('{data_list[id+sub_id][0][:40]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, '{data_list[id+sub_id][3][:60]}'),\n"
         f.write(query)
 
 # autofill Casualty table
 with open('data-pickles/casualty.pkl', 'rb') as f:
     data_list = pickle.load(f)
 with open('sql-scripts/casualty_fill.sql', 'w+') as f:
-    for id in range(0, record_per_table, 1000):
+    for id in range(0, int(record_per_table/4), 1000):
         query = "INSERT INTO Casualty \n(id, deg_of_loss) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
+            if id+sub_id == int(record_per_table/4):
+                break
+            if sub_id == 999 or id+sub_id == int(record_per_table/4)-1:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
@@ -67,36 +74,42 @@ with open('sql-scripts/casualty_fill.sql', 'w+') as f:
 with open('data-pickles/govn_rep.pkl', 'rb') as f:
     data_list = pickle.load(f)
 with open('sql-scripts/govn_fill.sql', 'w+') as f:
-    for id in range(0, record_per_table, 1000):
+    for id in range(0, int(record_per_table/4), 1000):
         query = "INSERT INTO Government_Representative \n(id, username, password) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
-                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}');\n"
+            if id+sub_id == int(record_per_table/4):
+                break
+            if sub_id == 999 or id+sub_id == int(record_per_table/4)-1:
+                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1][:40]}', '{data_list[id+sub_id][2][:60]}');\n"
             else:
-                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}'),\n"
+                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1][:40]}', '{data_list[id+sub_id][2][:60]}'),\n"
         f.write(query)
 
 # autofill Citizen table
 with open('data-pickles/citizen.pkl', 'rb') as f:
     data_list = pickle.load(f)
 with open('sql-scripts/citizen_fill.sql', 'w+') as f:
-    for id in range(0, record_per_table, 1000):
+    for id in range(0, int(record_per_table/4), 1000):
         query = "INSERT INTO Citizen \n(id, username, password, trust_level) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
-                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][4]});\n"
+            if id+sub_id == int(record_per_table/4):
+                break
+            if sub_id == 999 or id+sub_id == int(record_per_table/4)-1:
+                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1][:40]}', '{data_list[id+sub_id][2][:60]}', {data_list[id+sub_id][3]});\n"
             else:
-                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1]}', '{data_list[id+sub_id][2]}', {data_list[id+sub_id][4]}),\n"
+                query += f"({data_list[id+sub_id][0]}, '{data_list[id+sub_id][1][:40]}', '{data_list[id+sub_id][2][:60]}', {data_list[id+sub_id][3]}),\n"
         f.write(query)
 
 # autofill Criminal table
 with open('data-pickles/criminal.pkl', 'rb') as f:
     data_list = pickle.load(f)
 with open('sql-scripts/criminal_fill.sql', 'w+') as f:
-    for id in range(0, record_per_table, 1000):
+    for id in range(0, int(record_per_table/4), 1000):
         query = "INSERT INTO Criminal \n(id, no_of_crimes) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
+            if id+sub_id == int(record_per_table/4):
+                break
+            if sub_id == 999 or id+sub_id == int(record_per_table/4)-1:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
@@ -109,10 +122,11 @@ with open('sql-scripts/report_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
         query = "INSERT INTO Report \n(content, incident_id, govn_id, citizen_id) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
-                query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]});\n"
+            content = data_list[id+sub_id][0].replace("'", "")
+            if sub_id == 999:
+                query += f"('{content}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]});\n"
             else:
-                query += f"('{data_list[id+sub_id][0]}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]}),\n"
+                query += f"('{content}', {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, {data_list[id+sub_id][3]}),\n"
         f.write(query)
 
 # autofill Casualty_Incident table
@@ -122,7 +136,7 @@ with open('sql-scripts/casualty_incident_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
         query = "INSERT INTO Casualty_Incident \n(incident_id, casualty_id) \nVALUES\n"
         for sub_id in range(1000):
-            if id+sub_id == record_per_table-1:
+            if sub_id == 999:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]});\n"
             else:
                 query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}),\n"
