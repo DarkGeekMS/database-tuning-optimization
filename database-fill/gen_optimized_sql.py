@@ -63,11 +63,11 @@ with open('optimized-sql-scripts/incident_fill.sql', 'w+') as f:
         query = "INSERT INTO Incident (year, month, day, description, eco_loss, location, name, type, suspect) \nVALUES\n"
         for sub_id in range(1000):
             if sub_id == 999:
-                query += f"{data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
+                query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
                         {id}, {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5][:60]}', \
                         '{data_list[id+sub_id][6][:40]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]-3*persons_offset});\n"
             else:
-                query += f"{data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
+                query += f"({data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
                         {id}, {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5][:60]}', \
                         '{data_list[id+sub_id][6][:40]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]-3*persons_offset}),\n"
         f.write(query)
