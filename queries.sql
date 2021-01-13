@@ -1,66 +1,240 @@
--- 1) List names and ages of casualties of incidents with economic loss more than 50000
--- Non-optimized
-SELECT Person.name, Person.age 
-FROM Incident, Casualty_Incident, Casualty, Person
-WHERE Incident.id = Casualty_Incident.incident_id and Casualty_Incident.casualty_id = Casualty.id 
-    and Casualty.id = Person.id and Incident.eco_loss > 50000;
--- Optimized
-SELECT Casualty.name, Casualty.age 
-FROM Incident, Casualty_Incident, Casualty
-WHERE Incident.id = Casualty_Incident.incident_id and Casualty_Incident.casualty_id = Casualty.id 
-    and Incident.eco_loss > 50000;
+-- QUERY 1
+----------------------------------------------------------------------------------------------------
+-- filter not-needed conditions (satisfied by other conditions or impossible not to happen)
+/* Meaning: Query to get all Criminals that  
+    1- are males or females (i.e. No OTHERS here)
+    2- belong to a disaster that has an incident with eco loss higher than 50000
+    3- his crime is reviewed by a Government Representative that is older than 10 years old (No KIDS here)
+    4- is reported by a citizen whose trust level is not higher than 10 
+*/
 
--- 2) List degree of loss for casualties of disasters that have at least one previous occurance
--- Non-optimized
-SELECT deg_of_loss
-FROM Disaster, Incident, Casualty_Incident, Casualty
-WHERE Disaster.id=Incident.type and Incident.id = Casualty_Incident.incident_id 
-    and Casualty_Incident.casualty_id = Casualty.id and Disaster.no_of_prev_occur != 0;
--- Optimized
-SELECT deg_of_loss
-FROM Disaster, Incident, Casualty_Incident, Casualty
-WHERE Disaster.id=Incident.type and Incident.id = Casualty_Incident.incident_id 
-    and Casualty_Incident.casualty_id = Casualty.id and Disaster.no_of_prev_occur != 0;
-
--- 3) List names and dates of incidents that are reported by citizens with trust level more than 5
--- Non-optimized
-SELECT Incident.name, Incident.year, Incident.month, Incident.day
-FROM Incident, Report, Citizen
-WHERE Incident.id = Report.incident_id and Report.citizen_id = Citizen.id
-    and Citizen.trust_level > 5;
--- Optimized
-SELECT Incident.name, Incident.inc_date
-FROM Incident, Report, Citizen
-WHERE Incident.id = Report.incident_id and Report.citizen_id = Citizen.id
-    and Citizen.trust_level > 5;
-
--- 4) List information of all criminals involved in disasters with incidents of economic loss less than 50000
--- Non-optimized
-SELECT Person.name, Person.age, Person.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal, Person
-WHERE Disaster.id=Incident.type and Incident.suspect = Criminal.id
-    and Criminal.id = Person.id and Disaster.id IN (
-        SELECT Disaster.id
-        FROM Disaster, Incident
-        WHERE Disaster.id=Incident.type and Incident.eco_loss < 50000
-    );
--- Optimized
-SELECT Criminal.name, Criminal.age, Criminal.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal
-WHERE Disaster.id=Incident.type and Incident.suspect = Criminal.id
+-- OLD SCHEMA
+-- non-optimized
+SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
+FROM Disaster, Incident, Criminal, Person, Report
+    WHERE Disaster.id=Incident.type 
+    and Incident.suspect = Criminal.id 
+    and Incident.id = Report.incident_id 
+    and Criminal.id = Person.id 
+    -- can be removed (i.e. no OTHERS here)
+    and Person.gender IN (0,1)
     and Disaster.id IN (
         SELECT Disaster.id
         FROM Disaster, Incident
-        WHERE Disaster.id=Incident.type and Incident.eco_loss < 50000
-    );
+        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
+    )
+    -- can be removed (i.e. no Government Representatives less than or equal 10 years old)
+    and Report.govn_id IN (
+        SELECT Government_Representative.id
+        FROM Government_Representative, Person
+        WHERE Person.id=Government_Representative.id and (Person.age > 10 )
+    )
+    -- can be removed (i.e. trust levels are of maximum = 10)
+    and Report.citizen_id IN (
+        SELECT Citizen.id
+        FROM Citizen
+        WHERE (Citizen.trust_level <= 10)
+    )
+;
 
--- 5) List names and economic losses of incidents reported by citizens with an 'a' in their names
--- Non-optimized
-SELECT Incident.name, Incident.eco_loss
-FROM Report, Citizen, Incident, Person
-WHERE Report.citizen_id =  Citizen.id and Report.incident_id = Incident.id and Citizen.id =  Person.id 
-    and Person.name LIKE '%a%';
--- Optimized
-SELECT Incident.name, Incident.eco_loss
-FROM Incident, Report, Citizen
-WHERE Report.incident_id = Incident.id and Report.citizen_id =  Citizen.id and Citizen.name LIKE '%a%';
+-- OLD SCHEMA
+-- optimized on old schema
+SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
+FROM Disaster, Incident, Criminal, Person, Report
+    WHERE Disaster.id=Incident.type 
+    and Incident.suspect = Criminal.id 
+    and Incident.id = Report.incident_id 
+    and Criminal.id = Person.id 
+    and Disaster.id IN (
+        SELECT Disaster.id
+        FROM Disaster, Incident
+        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
+    )
+;
+
+-- NEW SCHEMA
+-- optimized on new schema
+SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
+FROM Disaster, Incident, Criminal, Report
+    WHERE Disaster.id=Incident.type 
+    and Incident.suspect = Criminal.id 
+    and Incident.id = Report.incident_id 
+    and Disaster.id IN (
+        SELECT Disaster.id
+        FROM Disaster, Incident
+        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
+    )
+;
+
+----------------------------------------------------------------------------------------------------
+-- QUERY 2
+----------------------------------------------------------------------------------------------------
+-- Index Tuning on Incident.name
+-- UNION ALL vs UNION
+/* Meaning: Query to get all Incidents that  
+    1- have a criminal with number of crimes less than 10
+    2- belong to a disaster with number of previous occurences higher than 10
+    3- have a name identical to an incident's name with year = 2010, month = 9, day = 20 or eco_loss = 100000
+*/
+
+-- OLD SCHEMA
+-- non-optimized query (i.e. before indexes and with UNION)
+SELECT Incident.id, Incident.suspect, Incident.type
+FROM Incident, Disaster, Criminal
+WHERE Incident.name IN (
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.year = 2010
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.month = 9
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.day = 20
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.eco_loss = 100000
+)
+and Incident.type = Disaster.id
+and Incident.suspect = Criminal.id
+and Disaster.no_of_prev_occur > 10
+and Criminal.no_of_crimes < 10
+;
+
+-- NEW or OLD SCHEMA
+-- first optimization (i.e. add index on Incident.name)
+CREATE INDEX Incident_name_Idx ON Incident(name);
+
+-- NEW or OLD SCHEMA
+-- optimized query (same non-optimized but with index on Incident.name now)
+SELECT Incident.id, Incident.suspect, Incident.type
+FROM Incident, Disaster, Criminal
+WHERE Incident.name IN (
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.year = 2010
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.month = 9
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.day = 20
+    UNION 
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.eco_loss = 100000
+)
+and Incident.type = Disaster.id
+and Incident.suspect = Criminal.id
+and Disaster.no_of_prev_occur > 10
+and Criminal.no_of_crimes < 10
+;
+
+-- NEW or OLD SCHEMA
+-- second optimization using UNION ALL instead of UNION
+SELECT Incident.id, Incident.suspect, Incident.type
+FROM Incident, Disaster, Criminal
+WHERE Incident.name IN (
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.year = 2010
+    UNION ALL
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.month = 9
+    UNION ALL
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.day = 20
+    UNION ALL
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.eco_loss = 100000
+)
+and Incident.type = Disaster.id
+and Incident.suspect = Criminal.id
+and Disaster.no_of_prev_occur > 10
+and Criminal.no_of_crimes < 10
+;
+
+-- NEW or OLD SCHEMA
+-- Drop indexes
+DROP INDEX Incident_name_Idx ON Incident;
+
+----------------------------------------------------------------------------------------------------
+-- QUERY 3
+----------------------------------------------------------------------------------------------------
+-- INDEX TUNING (i.e. UNION is Better than OR when there're indexes for different conditions)
+/* Meaning: Query to get all Incidents that is with
+     year = 2010 
+     or 
+     month = 9 
+     or
+     day = 20 
+     or
+     eco_loss = 100000
+*/
+
+-- OLD SCHEMA
+-- before added indexes -- non-optimal --
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.year = 2010
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.month = 9
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.day = 20
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.eco_loss = 100000;
+
+-- NEW or OLD SCHEMA
+-- before added indexes -- optimal --
+SELECT Incident.id
+FROM Incident
+    WHERE (Incident.year = 2010 or Incident.month = 9 or Incident.day = 20 or Incident.eco_loss = 100000)
+    ;
+
+-- NEW or OLD SCHEMA
+-- index adding
+CREATE INDEX Incident_month_Idx ON Incident(month);
+CREATE INDEX Incident_year_Idx ON Incident(year);
+CREATE INDEX Incident_day_Idx ON Incident(day);
+CREATE INDEX Incident_eco_loss_Idx ON Incident(eco_loss);
+
+-- NEW or OLD SCHEMA
+-- after added indexes -- optimal --
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.year = 2010
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.month = 9
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.day = 20
+UNION
+SELECT Incident.id
+FROM Incident
+    WHERE Incident.eco_loss = 100000;
+
+-- NEW or OLD SCHEMA
+-- Drop indexes
+DROP INDEX Incident_month_Idx ON Incident;
+DROP INDEX Incident_year_Idx ON Incident;
+DROP INDEX Incident_day_Idx ON Incident;
+DROP INDEX Incident_eco_loss_Idx ON Incident;
+
+----------------------------------------------------------------------------------------------------
