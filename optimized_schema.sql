@@ -22,7 +22,9 @@ CREATE TABLE Precautions (
 
 CREATE TABLE Incident (
     id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
-    inc_date DATE NOT NULL,
+    year SMALLINT NOT NULL,
+    month TINYINT NOT NULL,
+    day TINYINT NOT NULL,
     description MEDIUMINT,
     eco_loss INT DEFAULT 0,
     location CHAR(60) NOT NULL,
