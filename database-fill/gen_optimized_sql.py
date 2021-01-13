@@ -60,14 +60,14 @@ with open('optimized-sql-scripts/descriptions_fill.sql', 'w+') as f:
     f.write(query)
 with open('optimized-sql-scripts/incident_fill.sql', 'w+') as f:
     for id in range(0, record_per_table, 1000):
-        query = "INSERT INTO Incident (inc_date, description, eco_loss, location, name, type, suspect) \nVALUES\n"
+        query = "INSERT INTO Incident (year, month, day, description, eco_loss, location, name, type, suspect) \nVALUES\n"
         for sub_id in range(1000):
             if sub_id == 999:
-                query += f"('{data_list[id+sub_id][0]}-{str(data_list[id+sub_id][1]).zfill(2)}-{str(max(1,data_list[id+sub_id][2]-2)).zfill(2)}', \
+                query += f"{data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
                         {id}, {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5][:60]}', \
                         '{data_list[id+sub_id][6][:40]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]-3*persons_offset});\n"
             else:
-                query += f"('{data_list[id+sub_id][0]}-{str(data_list[id+sub_id][1]).zfill(2)}-{str(max(1,data_list[id+sub_id][2]-2)).zfill(2)}', \
+                query += f"{data_list[id+sub_id][0]}, {data_list[id+sub_id][1]}, {data_list[id+sub_id][2]}, \
                         {id}, {data_list[id+sub_id][4]}, '{data_list[id+sub_id][5][:60]}', \
                         '{data_list[id+sub_id][6][:40]}', {data_list[id+sub_id][7]}, {data_list[id+sub_id][8]-3*persons_offset}),\n"
         f.write(query)
