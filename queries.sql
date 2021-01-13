@@ -54,6 +54,7 @@ FROM Disaster, Incident, Criminal, Person, Report
 
 -- NEW SCHEMA --> time = 0.49 sec
 -- optimized on new schema
+-- TODO : NoSQL Implementation
 SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Report
     WHERE Disaster.id=Incident.type 
@@ -139,6 +140,7 @@ and Criminal.no_of_crimes < 10
 -- OLD SCHEMA --> time = 0.81 sec
 -- NEW SCHEMA --> time = 0.72 sec
 -- second optimization using UNION ALL instead of UNION
+-- TODO : NoSQL Implementation
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
 WHERE Incident.name IN (
@@ -217,6 +219,7 @@ CREATE INDEX Incident_eco_loss_Idx ON Incident(eco_loss);
 -- OLD SCHEMA --> time = 0.01 sec
 -- NEW SCHEMA --> time = 0.00 sec
 -- after added indexes -- optimal --
+-- TODO : NoSQL Implementation
 SELECT Incident.id
 FROM Incident
     WHERE Incident.year = 2010
@@ -245,7 +248,7 @@ DROP INDEX Incident_eco_loss_Idx ON Incident;
 ----------------------------------------------------------------------------------------------------
 -- SCHEMA OPTIMIZATION
 -- QUERY REWRITING
-/* Query gets the nmae, date, economic loss and report id of incident whose report is submitted by a female citizen
+/* Query gets the name, date, economic loss and report id of incident whose report is submitted by a female citizen
     to a male government representative
 */
 
@@ -267,6 +270,7 @@ and Report.govn_id IN (
 
 -- NEW SCHEMA --> time = 0.17 sec
 -- optimized
+-- TODO : NoSQL Implementation
 SELECT Incident.name, Incident.year, Incident.month, Incident.day, Incident.eco_loss, Report.id
 FROM Incident, Report, Citizen, Government_Representative
 WHERE Incident.id = Report.incident_id
@@ -274,3 +278,58 @@ and Report.citizen_id = Citizen.id and Report.govn_id = Government_Representativ
 and Citizen.gender = 0 and Government_Representative.gender = 1;
 
 ----------------------------------------------------------------------------------------------------
+-- Query 5
+----------------------------------------------------------------------------------------------------
+-- SCHEMA OPTIMIZATION
+-- QUERY REWRITING
+/* Query gets the name of incident and the information of involved casualties
+    where suspect at least one crime and economic loss less than 50000 and disaster type
+    with at least one previous occurance
+    1) redundant condition on number of crimes
+    2) ranges are slower than inequalities in sql
+    3) not equal is slower than inequality in sql
+*/
+
+-- OLD SCHEMA --> time = 0.39 sec
+-- unoptimized
+SELECT Incident.name, Person.name, Person.age, Person.gender, Person.address
+FROM Disaster, Incident, Casualty_Incident, Casualty, Person
+WHERE Disaster.id = Incident.type and Incident.id = Casualty_Incident.incident_id
+and Casualty_Incident.casualty_id = Casualty.id
+and Casualty.id = Person.id and Incident.suspect IN (
+    SELECT Criminal.id
+    FROM Criminal, Person
+    WHERE Criminal.id = Person.id and Criminal.no_of_crimes > 0
+) and Incident.eco_loss BETWEEN 0 AND 50000
+and Disaster.no_of_prev_occur != 0;
+
+-- NEW SCHEMA --> time = 0.31 sec
+-- unoptimized
+SELECT Incident.name, Casualty.name, Casualty.age, Casualty.gender, Casualty.address
+FROM Disaster, Incident, Casualty_Incident, Casualty
+WHERE Disaster.id = Incident.type and Incident.id = Casualty_Incident.incident_id
+and Casualty_Incident.casualty_id = Casualty.id
+and Incident.suspect IN (
+    SELECT id
+    FROM Criminal
+    WHERE no_of_crimes > 0
+) and Incident.eco_loss BETWEEN 0 AND 50000
+and Disaster.no_of_prev_occur != 0;
+
+-- OLD SCHEMA --> time = 0.26 sec
+-- optimized
+SELECT Incident.name, Person.name, Person.age, Person.gender, Person.address
+FROM Disaster, Incident, Casualty_Incident, Casualty, Person
+WHERE Disaster.id = Incident.type and Incident.id = Casualty_Incident.incident_id
+and Casualty_Incident.casualty_id = Casualty.id
+and Casualty.id = Person.id and Incident.eco_loss < 50000
+and Disaster.no_of_prev_occur > 0;
+
+-- NEW SCHEMA --> time = 0.23 sec
+-- optimized
+-- TODO : NoSQL Implementation
+SELECT Incident.name, Casualty.name, Casualty.age, Casualty.gender, Casualty.address
+FROM Disaster, Incident, Casualty_Incident, Casualty
+WHERE Disaster.id = Incident.type and Incident.id = Casualty_Incident.incident_id
+and Casualty_Incident.casualty_id = Casualty.id
+and Incident.eco_loss < 50000 and Disaster.no_of_prev_occur > 0;
