@@ -8,7 +8,7 @@
     4- is reported by a citizen whose trust level is not higher than 10 
 */
 
--- OLD SCHEMA
+-- OLD SCHEMA --> time = 1.81 sec
 -- non-optimized
 SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Person, Report
@@ -37,7 +37,7 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- OLD SCHEMA
+-- OLD SCHEMA --> time = 0.58 sec
 -- optimized on old schema
 SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Person, Report
@@ -52,7 +52,7 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- NEW SCHEMA
+-- NEW SCHEMA --> 0.49 sec
 -- optimized on new schema
 SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Report
@@ -77,7 +77,7 @@ FROM Disaster, Incident, Criminal, Report
     3- have a name identical to an incident's name with year = 2010, month = 9, day = 20 or eco_loss = 100000
 */
 
--- OLD SCHEMA
+-- NEW or OLD SCHEMA --> 9 mins - 39 secs
 -- non-optimized query (i.e. before indexes and with UNION)
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -108,7 +108,8 @@ and Criminal.no_of_crimes < 10
 -- first optimization (i.e. add index on Incident.name)
 CREATE INDEX Incident_name_Idx ON Incident(name);
 
--- NEW or OLD SCHEMA
+-- OLD SCHEMA --> 0.93 sec
+-- NEW SCHEMA --> 0.82 sec
 -- optimized query (same non-optimized but with index on Incident.name now)
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -135,7 +136,8 @@ and Disaster.no_of_prev_occur > 10
 and Criminal.no_of_crimes < 10
 ;
 
--- NEW or OLD SCHEMA
+-- OLD SCHEMA --> 0.81 sec
+-- NEW SCHEMA --> 0.72 sec
 -- second optimization using UNION ALL instead of UNION
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -180,7 +182,7 @@ DROP INDEX Incident_name_Idx ON Incident;
      eco_loss = 100000
 */
 
--- OLD SCHEMA
+-- NEW or OLD SCHEMA --> 0.07 sec
 -- before added indexes -- non-optimal --
 SELECT Incident.id
 FROM Incident
@@ -198,7 +200,7 @@ SELECT Incident.id
 FROM Incident
     WHERE Incident.eco_loss = 100000;
 
--- NEW or OLD SCHEMA
+-- NEW or OLD SCHEMA --> 0.03 sec
 -- before added indexes -- optimal --
 SELECT Incident.id
 FROM Incident
@@ -212,7 +214,8 @@ CREATE INDEX Incident_year_Idx ON Incident(year);
 CREATE INDEX Incident_day_Idx ON Incident(day);
 CREATE INDEX Incident_eco_loss_Idx ON Incident(eco_loss);
 
--- NEW or OLD SCHEMA
+-- OLD SCHEMA --> 0.01 sec
+-- NEW SCHEMA --> 0.00 sec
 -- after added indexes -- optimal --
 SELECT Incident.id
 FROM Incident

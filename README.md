@@ -20,10 +20,13 @@ This is a college project on database system tuning and query optimization.
     -   [ ] Stored Procedures.
     -   [ ] Storage Engine (_InnoDB_ vs. _MYISAM_).
     
--   [ ] Index Optimization :
-    -   [ ] New Indexes Generation.
+-   [x] Index Optimization :
+    -   [x] Indexes Generation on Non-Primary Keys.
+    -   [x] UNION is better than OR with Indexes.
 
--   [ ] Query Optimization.
+-   [x] Query Optimization :
+    -   [x] Unnecessary Conditions Elimination.
+    -   [x] UNION ALL instead of UNION.
 
 ## Required Statistics
 
