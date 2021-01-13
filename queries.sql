@@ -52,7 +52,7 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- NEW SCHEMA --> 0.49 sec
+-- NEW SCHEMA --> time = 0.49 sec
 -- optimized on new schema
 SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Report
@@ -77,7 +77,7 @@ FROM Disaster, Incident, Criminal, Report
     3- have a name identical to an incident's name with year = 2010, month = 9, day = 20 or eco_loss = 100000
 */
 
--- NEW or OLD SCHEMA --> 9 mins - 39 secs
+-- NEW or OLD SCHEMA --> time = 9 mins - 39 secs
 -- non-optimized query (i.e. before indexes and with UNION)
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -108,8 +108,8 @@ and Criminal.no_of_crimes < 10
 -- first optimization (i.e. add index on Incident.name)
 CREATE INDEX Incident_name_Idx ON Incident(name);
 
--- OLD SCHEMA --> 0.93 sec
--- NEW SCHEMA --> 0.82 sec
+-- OLD SCHEMA --> time = 0.93 sec
+-- NEW SCHEMA --> time = 0.82 sec
 -- optimized query (same non-optimized but with index on Incident.name now)
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -136,8 +136,8 @@ and Disaster.no_of_prev_occur > 10
 and Criminal.no_of_crimes < 10
 ;
 
--- OLD SCHEMA --> 0.81 sec
--- NEW SCHEMA --> 0.72 sec
+-- OLD SCHEMA --> time = 0.81 sec
+-- NEW SCHEMA --> time = 0.72 sec
 -- second optimization using UNION ALL instead of UNION
 SELECT Incident.id, Incident.suspect, Incident.type
 FROM Incident, Disaster, Criminal
@@ -182,7 +182,7 @@ DROP INDEX Incident_name_Idx ON Incident;
      eco_loss = 100000
 */
 
--- NEW or OLD SCHEMA --> 0.07 sec
+-- NEW or OLD SCHEMA --> time = 0.07 sec
 -- before added indexes -- non-optimal --
 SELECT Incident.id
 FROM Incident
@@ -200,7 +200,7 @@ SELECT Incident.id
 FROM Incident
     WHERE Incident.eco_loss = 100000;
 
--- NEW or OLD SCHEMA --> 0.03 sec
+-- NEW or OLD SCHEMA --> time = 0.03 sec
 -- before added indexes -- optimal --
 SELECT Incident.id
 FROM Incident
@@ -214,8 +214,8 @@ CREATE INDEX Incident_year_Idx ON Incident(year);
 CREATE INDEX Incident_day_Idx ON Incident(day);
 CREATE INDEX Incident_eco_loss_Idx ON Incident(eco_loss);
 
--- OLD SCHEMA --> 0.01 sec
--- NEW SCHEMA --> 0.00 sec
+-- OLD SCHEMA --> time = 0.01 sec
+-- NEW SCHEMA --> time = 0.00 sec
 -- after added indexes -- optimal --
 SELECT Incident.id
 FROM Incident
@@ -239,5 +239,38 @@ DROP INDEX Incident_month_Idx ON Incident;
 DROP INDEX Incident_year_Idx ON Incident;
 DROP INDEX Incident_day_Idx ON Incident;
 DROP INDEX Incident_eco_loss_Idx ON Incident;
+
+----------------------------------------------------------------------------------------------------
+-- Query 4
+----------------------------------------------------------------------------------------------------
+-- SCHEMA OPTIMIZATION
+-- QUERY REWRITING
+/* Query gets the nmae, date, economic loss and report id of incident whose report is submitted by a female citizen
+    to a male government representative
+*/
+
+-- OLD SCHEMA --> time = 0.27 sec
+-- unoptimized
+SELECT Incident.name, Incident.year, Incident.month, Incident.day, Incident.eco_loss, Report.id
+FROM Incident, Report
+WHERE Incident.id = Report.incident_id
+and Report.citizen_id IN (
+    SELECT Citizen.id
+    FROM Citizen, Person
+    WHERE Citizen.id = Person.id and Person.gender = 0
+)
+and Report.govn_id IN (
+    SELECT Government_Representative.id
+    FROM Government_Representative, Person
+    WHERE Government_Representative.id = Person.id and Person.gender = 1
+);
+
+-- NEW SCHEMA --> time = 0.17 sec
+-- optimized
+SELECT Incident.name, Incident.year, Incident.month, Incident.day, Incident.eco_loss, Report.id
+FROM Incident, Report, Citizen, Government_Representative
+WHERE Incident.id = Report.incident_id
+and Report.citizen_id = Citizen.id and Report.govn_id = Government_Representative.id
+and Citizen.gender = 0 and Government_Representative.gender = 1;
 
 ----------------------------------------------------------------------------------------------------
