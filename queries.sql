@@ -119,7 +119,7 @@ FROM Disaster, Incident, Criminal, Person, Report
 -- NEW SCHEMA --> time = 0.49 sec
 -- optimized on new schema
 -- TODO : NoSQL Implementation
-SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
+SELECT Incident.name, Criminal.name, Criminal.age, Criminal.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Report
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
