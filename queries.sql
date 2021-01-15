@@ -124,12 +124,7 @@ FROM Disaster, Incident, Criminal, Report
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
     and Incident.id = Report.incident_id 
-    and Disaster.id IN (
-        SELECT Disaster.id
-        FROM Disaster, Incident
-        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
-    )
-;
+    and Incident.eco_loss > 50000;
 
 ----------------------------------------------------------------------------------------------------
 -- QUERY 2
