@@ -101,29 +101,22 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- OLD SCHEMA --> time = 0.58 sec
+-- OLD SCHEMA --> time = 0.18 sec
 -- optimized on old schema
 SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal, Person, Report
+FROM Disaster, Incident, Criminal, Person
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
-    and Incident.id = Report.incident_id 
     and Criminal.id = Person.id 
-    and Disaster.id IN (
-        SELECT Disaster.id
-        FROM Disaster, Incident
-        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
-    )
-;
+    and Incident.eco_loss > 50000;
 
--- NEW SCHEMA --> time = 0.49 sec
+-- NEW SCHEMA --> time = 0.14 sec
 -- optimized on new schema
 -- TODO : NoSQL Implementation
 SELECT Incident.name, Criminal.name, Criminal.age, Criminal.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal, Report
+FROM Disaster, Incident, Criminal
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
-    and Incident.id = Report.incident_id 
     and Incident.eco_loss > 50000;
 
 ----------------------------------------------------------------------------------------------------
