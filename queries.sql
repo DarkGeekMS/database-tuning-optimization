@@ -1,3 +1,67 @@
+-- for Memory optimization we update the InnoDB Buffer pool size with different values and compared the results (default value = 134217728 )
+-- default time on Query 1 ->
+    -- 1st -> 1.53 sec
+    -- 2nd -> 0.68 sec
+    -- 3rd -> 
+-- default time on Query 3 ->
+    -- 1st -> 0.09 sec
+    -- 2nd -> 0.07 sec
+    -- 3rd -> 0.01 sec
+-- default time on Query 4 ->
+    -- 1st -> 0.43 sec
+    -- 2nd ->
+-- default time on Query 5 ->
+    -- 1st -> 0.51 sec
+    -- 2nd ->
+    -- 3rd -> 0.39 sec
+    -- 4th ->
+---------------------------------------------------------------------------------------------------------
+
+-- set the buffer size to 2GB( 2147483648 ).
+-- effect on Query 1 ->
+    -- 1st -> 1.16 sec
+    -- 2nd -> 0.69 sec
+    -- 3rd -> 
+-- effect on Query 3 ->
+    -- 1st -> 0.08 sec
+    -- 2nd -> 0.06 sec
+    -- 3ed -> 0.05 sec
+-- effect on Query 4 ->
+    -- 1st -> 0.27 sec
+    -- 2nd -> 
+-- effect on Query 5 ->
+    -- 1st -> 0.56 sec
+    -- 2nd ->
+    -- 3rd -> 0.28 sec
+    -- 4th ->
+
+
+SET GLOBAL innodb_buffer_pool_size=2147483648;  
+
+
+-- set the buffer size to 4G(402653184). 
+-- effect on Query 1 ->
+    -- 1st -> 1.26 sec
+    -- 2nd -> 0.6 sec
+    -- 3rd -> 
+-- effect on Query 3 ->
+    -- 1st -> 0.08 sec
+    -- 2nd -> 0.04 sec
+    -- 3ed -> 0.04 sec
+-- effect on Query 4 ->
+    -- 1st -> 0.33 sec
+    -- 2nd -> 
+-- effect on Query 5 ->
+    -- 1st -> 0.43 sec
+    -- 2nd ->
+    -- 3rd -> 0.35 sec
+    -- 4th ->
+
+SET GLOBAL innodb_buffer_pool_size=402653184;  
+
+
+
+
 -- QUERY 1
 ----------------------------------------------------------------------------------------------------
 -- filter not-needed conditions (satisfied by other conditions or impossible not to happen)
