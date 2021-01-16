@@ -14,11 +14,9 @@ This is a college project on database system tuning and query optimization.
     -   [x] Normalization/Denormalization.
     -   [x] Data types optimization.
 
--   [ ] Memory and Cache Optimization :
-    -   [ ] Paging.
-    -   [ ] Hardware Specs.
-    -   [ ] Stored Procedures.
-    -   [ ] Storage Engine (_InnoDB_ vs. _MYISAM_).
+-   [x] Memory and Cache Optimization :
+    -   [x] Hardware Specs.
+    -   [x] Stored Procedures.
     
 -   [x] Index Optimization :
     -   [x] Indexes Generation on Non-Primary Keys.
@@ -37,3 +35,11 @@ This is a college project on database system tuning and query optimization.
 -   [ ] Different Sizes of Optimized _SQL_ (10,000 / 100,000 / 1,000,000).
 
 -   [ ] Different hardware on Optimized _SQL_.
+
+## Clearing Disk Cache
+
+-   To clear disk cache for database :
+    ```bash
+    chmod +x clear_cache.bash
+    ./clear_cache.bash
+    ```

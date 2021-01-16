@@ -35,9 +35,7 @@
     -- 3rd -> 0.28 sec
     -- 4th ->
 
-
 SET GLOBAL innodb_buffer_pool_size=2147483648;  
-
 
 -- set the buffer size to 4G(402653184). 
 -- effect on Query 1 ->
@@ -58,9 +56,6 @@ SET GLOBAL innodb_buffer_pool_size=2147483648;
     -- 4th ->
 
 SET GLOBAL innodb_buffer_pool_size=402653184;  
-
-
-
 
 -- QUERY 1
 ----------------------------------------------------------------------------------------------------
@@ -101,7 +96,7 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- OLD SCHEMA --> time = 0.18 sec
+-- OLD SCHEMA --> time = 0.39 sec
 -- optimized on old schema
 SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
 FROM Disaster, Incident, Criminal, Person
@@ -115,7 +110,7 @@ FROM Disaster, Incident, Criminal, Person
     )
 ;
 
--- NEW SCHEMA --> time = 0.14 sec
+-- NEW SCHEMA --> time = 0.34 sec
 -- optimized on new schema
 -- TODO : NoSQL Implementation
 SELECT Incident.name, Criminal.name, Criminal.age, Criminal.gender, Criminal.no_of_crimes
