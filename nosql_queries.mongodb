@@ -1,5 +1,38 @@
 use Disasters_DB
 
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+db.Reports.aggregate([
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "incident.suspect_id",   
+            foreignField: "_id", 
+            as: "criminal_info"        
+        }
+    },
+    {$unwind: "$criminal_info"},
+    {
+        $match: {
+            "_id": {$in : db.Reports.distinct("_id", {"incident.eco_loss": {$gt: 50000}})}
+        }
+    },
+    {   
+        $project:{
+            criminal_name: "$criminal_info.name",
+            criminal_age: "$criminal_info.age",
+            criminal_gender: "$criminal_info.gender",
+            criminal_address: "$criminal_info.address",
+            number_of_crimes: "$criminal_info.no_of_crimes",
+
+        } 
+    } 
+])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
 db.Reports.aggregate([
     {
         $project: {
@@ -27,6 +60,9 @@ db.Reports.aggregate([
         }
     }   
 ])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
 
 db.Reports.aggregate([
     {
@@ -72,6 +108,10 @@ db.Reports.aggregate([
         } 
     },
 ])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
 
 //Query 5
 
