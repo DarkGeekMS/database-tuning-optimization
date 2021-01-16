@@ -17,7 +17,7 @@
     -- 4th ->
 ---------------------------------------------------------------------------------------------------------
 
--- set the buffer size to 2GB( 2147483648 ).
+-- set the buffer size to 32MB(33554432).
 -- effect on Query 1 ->
     -- 1st -> 1.16 sec
     -- 2nd -> 0.69 sec
@@ -35,9 +35,9 @@
     -- 3rd -> 0.28 sec
     -- 4th ->
 
-SET GLOBAL innodb_buffer_pool_size=2147483648;  
+SET GLOBAL innodb_buffer_pool_size=33554432;
 
--- set the buffer size to 4G(402653184). 
+-- set the buffer size to 4G(4294967295). 
 -- effect on Query 1 ->
     -- 1st -> 1.26 sec
     -- 2nd -> 0.6 sec
@@ -55,7 +55,7 @@ SET GLOBAL innodb_buffer_pool_size=2147483648;
     -- 3rd -> 0.35 sec
     -- 4th ->
 
-SET GLOBAL innodb_buffer_pool_size=402653184;  
+SET GLOBAL innodb_buffer_pool_size=4294967295;
 
 -- QUERY 1
 ----------------------------------------------------------------------------------------------------
