@@ -108,7 +108,12 @@ FROM Disaster, Incident, Criminal, Person
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
     and Criminal.id = Person.id 
-    and Incident.eco_loss > 50000;
+    and Disaster.id IN (
+        SELECT Disaster.id
+        FROM Disaster, Incident
+        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
+    )
+;
 
 -- NEW SCHEMA --> time = 0.14 sec
 -- optimized on new schema
@@ -117,7 +122,12 @@ SELECT Incident.name, Criminal.name, Criminal.age, Criminal.gender, Criminal.no_
 FROM Disaster, Incident, Criminal
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
-    and Incident.eco_loss > 50000;
+    and Disaster.id IN (
+        SELECT Disaster.id
+        FROM Disaster, Incident
+        WHERE Disaster.id=Incident.type and Incident.eco_loss > 50000 
+    )
+;
 
 ----------------------------------------------------------------------------------------------------
 -- QUERY 2
