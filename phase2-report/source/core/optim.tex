@@ -1,4 +1,75 @@
+In this section, we show the optimization details done through this work. We discuss the statistics of the new database and the schema changes. Moreover, other optimization techniques related to query, indexes and memory are discussed, as well.
+
 \subsection{New Database Statistics}
+In this subsection, we show the new database statistics after optimization. The record count is extracted from the database filled with $100000$ records per table. Other filling sizes are considered through the analysis like $10000$ and $1000000$. \\
+
+\begin{tabular}{||c | c | c | c | c||} 
+ \hline
+ Table Name & Row Count & Main Key & Indexes & FK  \\ [0.5ex] 
+ \hline\hline
+ Disaster & 100000 & YES & 4 & 2 \\ 
+ \hline\hline
+ Causes & 100000 & YES & 1 & 1 \\ 
+ \hline\hline
+ Precautions & 100000 & YES & 1 & 1 \\ 
+ \hline\hline
+ Incident & 100000 & YES & 4 & 3 \\ 
+ \hline\hline
+ Descriptions & 100000 & YES & 1 & 1 \\ 
+ \hline\hline
+ Casualty & 25000 & YES & 1 & 0 \\ 
+ \hline
+ Government\_Representative & 25000 & YES & 1 & 0 \\
+ \hline
+ Govn\_Rep\_Credentials & 25000 & YES & 1 & 1 \\
+ \hline
+ Citizen & 25000 & YES & 1 & 0 \\
+ \hline
+ Citizen\_Credentials & 25000 & YES & 1 & 1 \\
+ \hline
+ Criminal & 25000 & YES & 1 & 0 \\
+ \hline
+ Report & 100000 & YES & 5 & 4 \\
+ \hline
+ Report\_Content & 100000 & YES & 1 & 1 \\
+ \hline
+ Casualty\_Incident & 100000 & YES \emph{(Composite)} & 3 & 2 \\ [1ex] 
+ \hline
+\end{tabular} \\
+
+\begin{tabular}{||c | c | c||} 
+ \hline
+ Table Name & Identity Column & Max Row Size (Bytes) \\ [0.5ex] 
+ \hline\hline
+ Disaster & YES & 52 \\ 
+ \hline
+ Causes & YES & 65538 \\ 
+ \hline
+ Precautions & YES & 65538 \\ 
+ \hline
+ Incident & YES & 120 \\ 
+ \hline
+ Descriptions & YES & 65538 \\ 
+ \hline
+ Casualty & YES & 105 \\ 
+ \hline
+ Government\_Representative & YES & 116 \\ 
+ \hline
+ Govn\_Rep\_Credentials & YES & 103 \\ 
+ \hline
+ Citizen & YES & 116 \\ 
+ \hline
+ Citizen\_Credentials & YES & 103 \\ 
+ \hline
+ Criminal & YES & 106 \\ 
+ \hline
+ Report & YES & 23 \\ 
+ \hline
+ Report\_Content & YES & 65538 \\ 
+ \hline
+ Casualty\_Incident & NO & 6 \\ [1ex] 
+ \hline
+\end{tabular}
 
 \subsection{Schema Optimization}
 

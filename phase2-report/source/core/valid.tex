@@ -1,5 +1,5 @@
 \subsection{Time and Space Analysis}
-In this section, we evaluate both time and space improvements of each optimization on each query. We consider both before and after \emph{disk cache}. Moreover, the space improvement is considering the total size of the transferred tables between memory and disk. Execution time is measured in \emph{seconds}. \\
+In this subsection, we evaluate both time and space improvements of each optimization on each query. We consider both before and after \emph{disk cache}. Moreover, the space improvement is considering the \textbf{total size} of the transferred tables between memory and disk. Execution time is measured in \emph{seconds}. \\
 
 \begin{tabularx}{\textwidth}{|*{7}{Y|}}
 \hline
@@ -10,15 +10,15 @@ In this section, we evaluate both time and space improvements of each optimizati
 \hline
 Initial Query &16.78 &- &- &1.77 &- &- \\
 \hline
-After Index Opt. &- &- &- &- &- &- \\
+Index Opt. &- &- &- &- &- &- \\
 \hline
-After Query Opt. &10.87 &- &- &0.39 &- &- \\
+Query Opt. &10.87 &35\% &25\% &0.39 &78\% &25\% \\
 \hline
-After Schema Opt. &8.8 &- &- &0.33 &- &- \\
+Schema Opt. &8.8 &19\% &99.8\% &0.33 &18\% &99.8\% \\
 \hline
-After Memory Opt. &7.8 &- &- &0.3 &- &- \\
+Memory Opt. &7.8 &11\% &- &0.3 &9\% &- \\
 \hline
-\end{tabularx}
+\end{tabularx} \\
 
 \begin{tabularx}{\textwidth}{|*{7}{Y|}}
 \hline
@@ -29,15 +29,15 @@ After Memory Opt. &7.8 &- &- &0.3 &- &- \\
 \hline
 Initial Query &1535 &- &- &1463 &- &- \\
 \hline
-After Index Opt. &9.49 &- &- &0.78 &- &- \\
+Index Opt. &9.49 &99\% &- &0.78 &99.9\% &- \\
 \hline
-After Query Opt. &7.75 &- &- &0.68 &- &- \\
+Query Opt. &7.75 &18\% &- &0.68 &13\% &- \\
 \hline
-After Schema Opt. &6.8 &- &- &0.65 &- &- \\
+Schema Opt. &6.8 &12\% &99.8\% &0.65 &4\% &99.8\% \\
 \hline
-After Memory Opt. &5.77 &- &- &0.65 &- &- \\
+Memory Opt. &5.77 &15\% &- &0.65 &0\% &- \\
 \hline
-\end{tabularx}
+\end{tabularx} \\
 
 \begin{tabularx}{\textwidth}{|*{7}{Y|}}
 \hline
@@ -48,15 +48,15 @@ After Memory Opt. &5.77 &- &- &0.65 &- &- \\
 \hline
 Initial Query &0.36 &- &- &0.07 &- &- \\
 \hline
-After Index Opt. &0.23 &- &- &0.01 &- &- \\
+Index Opt. &0.23 &36\% &- &0.01 &85.7\% &- \\
 \hline
-After Query Opt. &0.19 &- &- &0.01 &- &- \\
+Query Opt. &0.19 &17\% &- &0.01 &0\% &- \\
 \hline
-After Schema Opt. &0.14 &- &- &0 &- &- \\
+Schema Opt. &0.14 &26\% &99.8\% &0 &100\% &99.8\% \\
 \hline
-After Memory Opt. &0.12 &- &- &0 &- &- \\
+Memory Opt. &0.12 &14\% &- &0 &0\% &- \\
 \hline
-\end{tabularx}
+\end{tabularx} \\
 
 \begin{tabularx}{\textwidth}{|*{7}{Y|}}
 \hline
@@ -67,15 +67,15 @@ After Memory Opt. &0.12 &- &- &0 &- &- \\
 \hline
 Initial Query &10.41 &- &- &0.27 &- &- \\
 \hline
-After Index Opt. &- &- &- &- &- &- \\
+Index Opt. &- &- &- &- &- &- \\
 \hline
-After Query Opt. &- &- &- &- &- &- \\
+Query Opt. &- &- &- &- &- &- \\
 \hline
-After Schema Opt. &6.37 &- &- &0.15 &- &- \\
+Schema Opt. &6.37 &39\% &99.8\% &0.15 &44\% &99.8\% \\
 \hline
-After Memory Opt. &6.01 &- &- &0.13 &- &- \\
+Memory Opt. &6.01 &5.5\% &- &0.13 &13\% &- \\
 \hline
-\end{tabularx}
+\end{tabularx} \\
 
 \begin{tabularx}{\textwidth}{|*{7}{Y|}}
 \hline
@@ -86,15 +86,15 @@ After Memory Opt. &6.01 &- &- &0.13 &- &- \\
 \hline
 Initial Query &6.14 &- &- &0.33 &- &- \\
 \hline
-After Index Opt. &- &- &- &- &- &- \\
+Index Opt. &- &- &- &- &- &- \\
 \hline
-After Query Opt. &4.39 &- &- &0.26 &- &- \\
+Query Opt. &4.39 &28.5\% &- &0.26 &21\% &- \\
 \hline
-After Schema Opt. &2.94 &- &- &0.21 &- &- \\
+Schema Opt. &2.94 &33\% &99.85\% &0.21 &19\% &99.85\% \\
 \hline
-After Memory Opt. &2.34 &- &- &0.2 &- &- \\
+Memory Opt. &2.34 &20\% &- &0.2 &4.7\% &- \\
 \hline
-\end{tabularx}
+\end{tabularx} \\
 
 \subsection{Database Size Effect}
 The following plots show the effect of increasing database sizes on the execution time of our $5$ queries. We consider both before and after \emph{disk cache}.
