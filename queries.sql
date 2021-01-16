@@ -1,3 +1,62 @@
+-- for Memory optimization we update the InnoDB Buffer pool size with different values and compared the results (default value = 134217728 )
+-- default time on Query 1 ->
+    -- 1st -> 1.53 sec
+    -- 2nd -> 0.68 sec
+    -- 3rd -> 
+-- default time on Query 3 ->
+    -- 1st -> 0.09 sec
+    -- 2nd -> 0.07 sec
+    -- 3rd -> 0.01 sec
+-- default time on Query 4 ->
+    -- 1st -> 0.43 sec
+    -- 2nd ->
+-- default time on Query 5 ->
+    -- 1st -> 0.51 sec
+    -- 2nd ->
+    -- 3rd -> 0.39 sec
+    -- 4th ->
+---------------------------------------------------------------------------------------------------------
+
+-- set the buffer size to 32MB(33554432).
+-- effect on Query 1 ->
+    -- 1st -> 1.16 sec
+    -- 2nd -> 0.69 sec
+    -- 3rd -> 
+-- effect on Query 3 ->
+    -- 1st -> 0.08 sec
+    -- 2nd -> 0.06 sec
+    -- 3ed -> 0.05 sec
+-- effect on Query 4 ->
+    -- 1st -> 0.27 sec
+    -- 2nd -> 
+-- effect on Query 5 ->
+    -- 1st -> 0.56 sec
+    -- 2nd ->
+    -- 3rd -> 0.28 sec
+    -- 4th ->
+
+SET GLOBAL innodb_buffer_pool_size=33554432;
+
+-- set the buffer size to 4G(4294967295). 
+-- effect on Query 1 ->
+    -- 1st -> 1.26 sec
+    -- 2nd -> 0.6 sec
+    -- 3rd -> 
+-- effect on Query 3 ->
+    -- 1st -> 0.08 sec
+    -- 2nd -> 0.04 sec
+    -- 3ed -> 0.04 sec
+-- effect on Query 4 ->
+    -- 1st -> 0.33 sec
+    -- 2nd -> 
+-- effect on Query 5 ->
+    -- 1st -> 0.43 sec
+    -- 2nd ->
+    -- 3rd -> 0.35 sec
+    -- 4th ->
+
+SET GLOBAL innodb_buffer_pool_size=4294967295;
+
 -- QUERY 1
 ----------------------------------------------------------------------------------------------------
 -- filter not-needed conditions (satisfied by other conditions or impossible not to happen)
@@ -37,13 +96,12 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- OLD SCHEMA --> time = 0.58 sec
+-- OLD SCHEMA --> time = 0.39 sec
 -- optimized on old schema
 SELECT Incident.name, Person.name, Person.age, Person.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal, Person, Report
+FROM Disaster, Incident, Criminal, Person
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
-    and Incident.id = Report.incident_id 
     and Criminal.id = Person.id 
     and Disaster.id IN (
         SELECT Disaster.id
@@ -52,14 +110,13 @@ FROM Disaster, Incident, Criminal, Person, Report
     )
 ;
 
--- NEW SCHEMA --> time = 0.49 sec
+-- NEW SCHEMA --> time = 0.34 sec
 -- optimized on new schema
 -- TODO : NoSQL Implementation
-SELECT Incident.name, Criminal.name, Criminal.name, Criminal.gender, Criminal.no_of_crimes
-FROM Disaster, Incident, Criminal, Report
+SELECT Incident.name, Criminal.name, Criminal.age, Criminal.gender, Criminal.no_of_crimes
+FROM Disaster, Incident, Criminal
     WHERE Disaster.id=Incident.type 
     and Incident.suspect = Criminal.id 
-    and Incident.id = Report.incident_id 
     and Disaster.id IN (
         SELECT Disaster.id
         FROM Disaster, Incident
