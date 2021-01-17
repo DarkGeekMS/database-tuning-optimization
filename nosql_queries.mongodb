@@ -1,0 +1,149 @@
+use Disasters_DB
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+db.Reports.aggregate([
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "incident.suspect_id",   
+            foreignField: "_id", 
+            as: "criminal_info"        
+        }
+    },
+    {$unwind: "$criminal_info"},
+    {
+        $match: {
+            "_id": {$in : db.Reports.distinct("_id", {"incident.eco_loss": {$gt: 50000}})}
+        }
+    },
+    {   
+        $project:{
+            criminal_name: "$criminal_info.name",
+            criminal_age: "$criminal_info.age",
+            criminal_gender: "$criminal_info.gender",
+            criminal_address: "$criminal_info.address",
+            number_of_crimes: "$criminal_info.no_of_crimes",
+
+        } 
+    } 
+])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+db.Reports.aggregate([
+    {
+        $project: {
+            incident_year: { $year: new Date("$incident.date")},
+            incident_month: {$month: new Date("$incident.date")},
+            incident_day: {$dayOfMonth: new Date("$incident.date")},
+            _id: 1,
+        }
+    },
+    {
+        $match: {
+            $or: [
+                {incident_year : 2010},
+                {incident_month: 9},
+                {incident_day: 20},
+                {"incident.eco_loss": 100000}
+            ]
+        }
+    },
+     {
+        $project: {
+            incident_year: 0,
+            incident_month: 0,
+            incident_day: 0,
+        }
+    }   
+])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+db.Reports.aggregate([
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "govn_rep_id",   
+            foreignField: "_id", 
+            as: "govn_rep_info"        
+        }
+    },
+    {$unwind: "$govn_rep_info"},
+
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "citizen_id",   
+            foreignField: "_id", 
+            as: "citizen_info"        
+        }
+    },
+    {$unwind: "$citizen_info"},
+    
+    {
+        $match: {
+            $and: [
+                {
+                    "citizen_info.gender": 0
+                },
+                {
+                   "govn_rep_info.gender": 1
+                }
+            ]
+        }
+    },
+    {   
+        $project:{
+            incident_name: "$incident.type.name",
+            incident_year: { $year: new Date("$incident.date")},
+            incident_month: {$month: new Date("$incident.date")},
+            incident_day: {$dayOfMonth: new Date("$incident.date")},
+            incident_eco_loss: "$incident.eco_loss",
+            incident_report_id: "$_id"
+        } 
+    },
+])
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+
+//Query 5
+
+db.Reports.aggregate([
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "incident.casualties",   
+            foreignField: "_id", 
+            as: "persons"        
+        }
+    },
+    {$unwind: "$persons"},
+    {
+        $match: {
+            $and: [
+                {
+                    "incident.eco_loss": {$lt: 50000}
+                },
+                {
+                   "incident.type.no_of_prev_occur": {$gt : 0} 
+                }
+            ]
+        }
+    },
+    {   
+        $project:{
+            casuality_name: "$persons.name",
+            causality_age: "$persons.age",
+            causality_gender: "$persons.gender",
+            casuality_address: "$persons.address",
+            incident_name: "$incident.type.name",
+        } 
+    } 
+])
