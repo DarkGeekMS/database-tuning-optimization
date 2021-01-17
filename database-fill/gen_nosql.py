@@ -34,7 +34,9 @@ with open('nosql-collections/reports.json', 'w+') as f:
         disaster_id = incident_list[incident_id][7]
         casualties_ids = [casualty_incident_pair[1] for casualty_incident_pair in casualty_incident_list if casualty_incident_pair[0] == incident_id]
         document["incident"] = {
-            "date" : f"{incident_list[incident_id][0]}-{incident_list[incident_id][1]}-{incident_list[incident_id][2]}",
+            "year" : incident_list[incident_id][0],
+            "month" : incident_list[incident_id][1],
+            "day" : incident_list[incident_id][2],
             "description" : re.sub('[^A-Za-z0-9]+', '', incident_list[incident_id][3]),
             "eco_loss" : incident_list[incident_id][4],
             "location" : re.sub('[^A-Za-z0-9]+', '', incident_list[incident_id][5]),
