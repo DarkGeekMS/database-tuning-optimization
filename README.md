@@ -28,11 +28,11 @@ This is a college project on database system tuning and query optimization.
 
 ## Required Statistics
 
--   [ ] Non-optimized _SQL_ vs. Optimized _SQL_ (100,000).
+-   [x] Non-optimized _SQL_ vs. Optimized _SQL_ (100,000).
 
--   [ ] Optimized _SQL_ vs. _NoSQL_ (100,000).
+-   [x] Optimized _SQL_ vs. _NoSQL_ (100,000).
 
--   [ ] Different Sizes of Optimized _SQL_ (10,000 / 100,000 / 1,000,000).
+-   [x] Different Sizes of Optimized _SQL_ (10,000 / 100,000 / 1,000,000).
 
 -   [ ] Different hardware on Optimized _SQL_.
 

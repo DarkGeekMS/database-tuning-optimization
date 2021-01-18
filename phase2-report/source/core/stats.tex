@@ -7,6 +7,7 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \item \emph{MySQL} estimator doesn't consider database indexes.
 \end{enumerate}
 
+Moreover, the provided queries can be run in \textbf{parallel} given a multiprocessor \emph{(multi-core processor)} device and a \emph{DBMS} that supports parallelism. Unfortunately, we use \emph{MySQL}, which doesn't support parallel execution plans. So, we provide the \emph{parallel query processing reports} through theoretical analysis.
 
 \subsection{Query 1}
 
@@ -44,6 +45,12 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \caption{Visual execution plan for optimized query 1}
 \end{figure}
 
+\subsubsection{Parallel Query Execution}
+We can do the following analysis theoretically :
+\begin{itemize}
+    \item The \textbf{incident} table is fully scanned through a single worker (thread). Since we are using a \emph{4-core} processor, This scan can be run on 4 threads. The results from 4 streams are, then, gathered into a single stream. This can reduce the full scan time in the previous execution plan to \emph{quarter}.  
+\end{itemize}
+
 \subsection{Query 2}
 
 \subsubsection{Execution Plan Before Optimization}
@@ -60,6 +67,15 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \includegraphics[width=\textwidth]{images/execution_plans/q2-4-new.png}
     \caption{Visual execution plan for optimized query 2}
 \end{figure}
+
+\subsubsection{Parallel Query Execution}
+We can do the following analysis theoretically :
+\begin{itemize}
+    \item According to the previous \emph{execution plan}, the \emph{criminal} table is fully scanned at the beginning. This operation is done on a single thread. However, it can be executed in parallel on $4$ threads, which can reduce time to \emph{quarter}. The $4$ previous streams can be gathered in a single stream.
+    \item Also, the resulting temporary table is sorted in a single thread. However, it can be done on $4$ threads and then gathered to significantly reduce the costy time of sort.
+    \item Also note that using \emph{or} operation is the fastest on a single thread, however using 
+    \emph{unions} instead can provide more potential for parallel execution. Each \textbf{union} can be executed on a thread and then gathered to reduce time to \emph{quarter}.
+\end{itemize}
 
 \subsection{Query 3}
 
@@ -86,6 +102,12 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \includegraphics[width=\textwidth]{images/execution_plans/q3-3-new.png}
     \caption{Visual execution plan for optimized query 3}
 \end{figure}
+
+\subsubsection{Parallel Query Execution}
+We can do the following analysis theoretically :
+\begin{itemize}
+    \item From the previous \emph{execution plan}, it's obvious that the query can be divided on $4$ threads, one for each \emph{union} operation. The results are, then, gathered from $4$ streams, which allows for time reduction up to \emph{quarter}.
+\end{itemize}
 
 \subsection{Query 4}
 
@@ -123,6 +145,12 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \caption{Visual execution plan for optimized query 4}
 \end{figure}
 
+\subsubsection{Parallel Query Execution}
+We can do the following analysis theoretically :
+\begin{itemize}
+    \item The \textbf{Government\_Representative} table is fully scanned through a single worker (thread). Since we are using a \emph{4-core} processor, This scan can be run on 4 threads. The results from 4 streams are, then, gathered into a single stream. This can reduce the full scan time in the previous execution plan to \emph{quarter}.
+\end{itemize}
+
 \subsection{Query 5}
 
 \subsubsection{Execution Plan Before Optimization}
@@ -158,3 +186,9 @@ In this section, we show both \textbf{query trees} and \textbf{MySQL execution p
     \includegraphics[width=\textwidth]{images/execution_plans/q5-4-new.png}
     \caption{Visual execution plan for optimized query 5}
 \end{figure}
+
+\subsubsection{Parallel Query Execution}
+We can do the following analysis theoretically :
+\begin{itemize}
+    \item The \textbf{incident} table is fully scanned through a single worker (thread). We can see from the estimated cost that this takes up most of the query time. Since we are using a \emph{4-core} processor, This scan can be run on 4 threads. The results from 4 streams are, then, gathered into a single stream. This can reduce the full scan time in the previous execution plan to \emph{quarter}. This will greatly affect the query execution time.
+\end{itemize}
