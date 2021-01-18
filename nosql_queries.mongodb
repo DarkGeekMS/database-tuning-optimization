@@ -1,4 +1,7 @@
+
 use Disasters_DB
+
+// // //Query1
 
 db.Reports.getPlanCache().clear()
 db.Persons.getPlanCache().clear()
@@ -30,22 +33,144 @@ db.Reports.aggregate([
     } 
 ])
 
+// // -----------------------
+
+// Query 2
+
 db.Reports.getPlanCache().clear()
 db.Persons.getPlanCache().clear()
 
 db.Reports.aggregate([
     {
         $project: {
-            incident_year: { $year: new Date("$incident.date")},
-            incident_month: {$month: new Date("$incident.date")},
-            incident_day: {$dayOfMonth: new Date("$incident.date")},
+            incident_id: "$_id",
+            suspect_id: "$incident.suspect_id",
+            incident_type: "$incident.type",
+            incident_year: "$incident.year",
+            incident_month: "$incident.month",
+            incident_day: "$incident.day",
+        }
+    },
+    {
+        $match:{
+            incident_year: {$eq: 2010}
+        }
+    },
+    {
+        $unionWith: {
+          coll: 'Reports',
+          pipeline: [
+              {
+                $project: {
+                    incident_id: "$_id",
+                    suspect_id: "$incident.suspect_id",
+                    incident_type: "$incident.type",
+                    incident_year: "$incident.year",
+                    incident_month: "$incident.month",
+                    incident_day: "$incident.day",
+                }               
+              },
+              {
+                  $match: {
+                      incident_month: {$eq: 9}
+                  }
+              }
+          ]
+        }
+    },
+    {
+        $unionWith: {
+          coll: 'Reports',
+          pipeline: [
+              {
+                $project: {
+                    incident_id: "$_id",
+                    suspect_id: "$incident.suspect_id",
+                    incident_type: "$incident.type",
+                    incident_year: "$incident.year",
+                    incident_month: "$incident.month",
+                    incident_day: "$incident.day",
+                }               
+              },
+              {
+                  $match: {
+                      incident_day: {$eq: 20}
+                  }
+              }
+          ]
+        }
+    },
+    {
+        $unionWith: {
+          coll: 'Reports',
+          pipeline: [
+              {
+                $project: {
+                    incident_id: "$_id",
+                    suspect_id: "$incident.suspect_id",
+                    incident_type: "$incident.type",
+                    incident_year: "$incident.year",
+                    incident_month: "$incident.month",
+                    incident_day: "$incident.day",
+                }               
+              },
+              {
+                  $match: {
+                      "incident.eco_loss": {$eq: 100000}
+                  }
+              }
+          ]
+        }
+    },
+    {
+        $lookup:{
+            from: "Persons",       
+            localField: "suspect_id",   
+            foreignField: "_id", 
+            as: "criminal_info"        
+        }
+    },
+    {
+        $unwind: "$criminal_info"
+    },
+
+    {
+    $project: {
+        incident_id: "$_id",
+        suspect_id: 1,
+        incident_type: 1,
+        no_of_crimes: "$criminal_info.no_of_crimes"
+        }               
+    },
+
+    {
+        $match: {
+            $and: [
+            {"incident_type.no_of_prev_occur": {$gt: 10}},
+            {no_of_crimes: {$lt: 10}}
+            ]
+        }
+    }
+])
+
+// // //Query3
+
+db.Reports.getPlanCache().clear()
+db.Persons.getPlanCache().clear()
+
+db.Reports.aggregate([
+    {
+        $project: {
+            incident_year: "$incident.year",
+            incident_month: "$incident.month",
+            incident_day: "$incident.day",
             _id: 1,
         }
     },
     {
         $match: {
             $or: [
-                {incident_year : 2010},
+                {incident_year: 2010},
                 {incident_month: 9},
                 {incident_day: 20},
                 {"incident.eco_loss": 100000}
@@ -57,9 +182,16 @@ db.Reports.aggregate([
             incident_year: 0,
             incident_month: 0,
             incident_day: 0,
+            _id: 1
         }
     }   
 ])
+
+ //-----------------------------------------
+
+
+//------------------------------------------------
+//Query 4
 
 db.Reports.getPlanCache().clear()
 db.Persons.getPlanCache().clear()
@@ -109,11 +241,14 @@ db.Reports.aggregate([
     },
 ])
 
+// // // //----------------
+
+// // // //Query 5
+
 db.Reports.getPlanCache().clear()
 db.Persons.getPlanCache().clear()
 
 
-//Query 5
 
 db.Reports.aggregate([
     {
