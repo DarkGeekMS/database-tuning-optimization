@@ -1,4 +1,12 @@
-In this section, we show both \textbf{query trees} and \textbf{MySQL execution plan} for the first \emph{non-optimized} and \emph{final optimized} version of each query. Moreover, we provide \emph{parallel query processing reports} for each query. This illustrates the optimization of the query statements that might include \emph{schema, query rewriting, semantic and statistical heuristics}.
+In this section, we show both \textbf{query trees} and \textbf{MySQL execution plan} for the first \emph{non-optimized} and \emph{final optimized} version of each query. Moreover, we provide \emph{parallel query processing reports} for each query. This illustrates the optimization of the query statements that might include \emph{schema, query rewriting, semantic and statistical heuristics}. \\
+
+\textbf{Note that,} the cost estimates in \emph{MySQL} execution plan can be inaccurate, due to the following :
+\begin{enumerate}
+    \item The unit of the cost is an abstract number that not necessarily relate to the real execution. It's just used as a heuristic to order certain operations in the query execution.
+    \item \emph{MySQL} estimator considers equal costs for both \emph{CPU} and \emph{IO} operations, which isn't valid, due to modern processors' speeds.
+    \item \emph{MySQL} estimator doesn't consider database indexes.
+\end{enumerate}
+
 
 \subsection{Query 1}
 

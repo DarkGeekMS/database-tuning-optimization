@@ -1,4 +1,9 @@
 In this work, we have discussed various database optimization techniques and showed how the query execution time can be affected for both \emph{SQL} and \emph{NoSQL} databases. The final remarks can be summarized as follows :
 \begin{itemize}
-    \item 
+    \item With good optimization, \emph{SQL} databases can achieve a comparable performance with \emph{NoSQL} databases.
+    \item \textbf{MySQL} is a very versatile \emph{DBMS} that can adapt to multiple optimization operations, enabling the user to increase queries execution speed.
+    \item \textbf{MongoDB} can be the perfect choice for a \emph{NoSQL DBMS}, as it's easy to use and deploy on very large systems.
+    \item For some operations, \emph{index optimization} can provide a huge performance improvement, if it's done right on specific fields in the database.
+    \item It's a good practice to extract \emph{semantic} and \emph{statistical} heuristics based on your database. This can provide the developer with good insights on how to optimize queries and eliminate redundant operations.
+    \item Try to keep the record size in frequently-accessed tables \emph{fixed}, as it's much faster to access fixed-size records. Moreover, it's better to partition the infrequent variable-size fields into separate tables.
 \end{itemize}
