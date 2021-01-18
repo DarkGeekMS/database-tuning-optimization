@@ -98,11 +98,19 @@ So, we can summarize our \emph{memory optimization} as follows :
     \item Increasing \texttt{INNODB}'s buffer pool size, which is responsible for the amount of memory allocated for \emph{DBMS} operations, from \emph{32MB} to \emph{4GB}.
 \end{itemize}
 
-\subsection{Index Tuning}
 
-\subsection{Query Optimization}
-\subsubsection{Query 1}
-\subsubsection{Query 2}
-\subsubsection{Query 3}
-\subsubsection{Query 4}
-\subsubsection{Query 5}
+\subsection{Index Tuning}
+\input{core/indexTuning}
+
+
+\subsection{Query Rewriting}
+\input{core/queryRewriting}
+
+\subsection{Semantic and Statistic Query Optimization}
+\input{core/semanticOptimization}
+
+
+\subsection{Used Optimizations in our Queries}
+\input{core/usedOptimizations}
+
+

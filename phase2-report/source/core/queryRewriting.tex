@@ -1,0 +1,8 @@
+\subsubsection{OR performs better than UNION in IN conditions}
+In \textbf{IN} conditions, using \textbf{UNION} adds overhead on checking all conditions one at a time, but in \textbf{OR}, The condition is considered true once one of the conditions is evaluated as \textbf{TRUE}.
+As shown in \textbf{\textit{Query 2}}, once \textbf{Incident.year} is equal to 2010, no need to check the remaining conditions.
+
+\subsubsection{UNION ALL is faster than UNION}
+\textbf{UNION ALL} doesn't remove duplicates but \textbf{UNION} does, so Whenever \textbf{UNION} and \textbf{UNION ALL} are equivalent, Use \textbf{UNION ALL} as shown in \textbf{\textit{Query 2}},. For example, if we are trying to union mutually exclusive columns (no mutual information), using \textbf{UNION ALL} will be much faster.
+
+
