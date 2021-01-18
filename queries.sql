@@ -160,6 +160,7 @@ and Incident.type = Disaster.id
 and Incident.suspect = Criminal.id
 and Disaster.no_of_prev_occur > 10
 and Criminal.no_of_crimes < 10
+ORDER BY Incident.name
 ;
 
 -- NEW or OLD SCHEMA
@@ -192,6 +193,7 @@ and Incident.type = Disaster.id
 and Incident.suspect = Criminal.id
 and Disaster.no_of_prev_occur > 10
 and Criminal.no_of_crimes < 10
+ORDER BY Incident.name
 ;
 
 -- OLD SCHEMA --> time = 0.81 sec
@@ -221,6 +223,23 @@ and Incident.type = Disaster.id
 and Incident.suspect = Criminal.id
 and Disaster.no_of_prev_occur > 10
 and Criminal.no_of_crimes < 10
+ORDER BY Incident.name
+;
+
+-- third optimization using or instead of UNION ALL
+-- TODO : NoSQL Implementation
+SELECT Incident.id, Incident.suspect, Incident.type
+FROM Incident, Disaster, Criminal
+WHERE Incident.name IN (
+    SELECT Incident.name
+    FROM Incident
+        WHERE Incident.year = 2010 or Incident.month = 9 or Incident.day = 20 or Incident.eco_loss = 100000
+)
+and Incident.type = Disaster.id
+and Incident.suspect = Criminal.id
+and Disaster.no_of_prev_occur > 10
+and Criminal.no_of_crimes < 10
+ORDER BY Incident.name
 ;
 
 -- NEW or OLD SCHEMA
