@@ -1,6 +1,0 @@
-% \subsubsection{Use indexes on sort and search fields}
-Using indexes on fields that are frequently used in our queries makes them much faster like creating indexes on fields that we use in search or sort, especially if these fields are strings. As shown in \textbf{\textit{Query 2}}, creating index on \textbf{Incident.name} will boost up the performance as index field is a sorted data structure that makes searching process much faster (log IO/CPU complexity rather than linear one). creating indexes on \textbf{Incident.year}, \textbf{Incident.month}, \textbf{Incident.day}, \textbf{Incident.eco\_loss} will make it further faster.
-
-    
-
-

@@ -98,19 +98,85 @@ So, we can summarize our \emph{memory optimization} as follows :
     \item Increasing \texttt{INNODB}'s buffer pool size, which is responsible for the amount of memory allocated for \emph{DBMS} operations, from \emph{32MB} to \emph{4GB}.
 \end{itemize}
 
-
 \subsection{Index Tuning}
-\input{core/indexTuning}
-
+Using indexes on fields that are frequently used in our queries makes them much faster like creating indexes on fields that we use in search or sort, especially if these fields are strings. As shown in \textbf{\textit{Query 2}}, creating index on \textbf{Incident.name} will boost up the performance as index field is a sorted data structure that makes searching process much faster (log IO/CPU complexity rather than linear one). creating indexes on \textbf{Incident.year}, \textbf{Incident.month}, \textbf{Incident.day}, \textbf{Incident.eco\_loss} will make it further faster.
 
 \subsection{Query Rewriting}
-\input{core/queryRewriting}
+\subsubsection{OR performs better than UNION in IN conditions}
+In \textbf{IN} conditions, using \textbf{UNION} adds overhead on checking all conditions one at a time, but in \textbf{OR}, The condition is considered true once one of the conditions is evaluated as \textbf{TRUE}.
+As shown in \textbf{\textit{Query 2}}, once \textbf{Incident.year} is equal to 2010, no need to check the remaining conditions.
+
+\subsubsection{UNION ALL is faster than UNION}
+\textbf{UNION ALL} doesn't remove duplicates but \textbf{UNION} does, so whenever \textbf{UNION} and \textbf{UNION ALL} are equivalent, use \textbf{UNION ALL} as shown in \textbf{\textit{Query 2}}. For example, if we are trying to union mutually exclusive columns (no mutual information), using \textbf{UNION ALL} will be much faster.
 
 \subsection{Semantic and Statistic Query Optimization}
-\input{core/semanticOptimization}
+Remove constraints specified on the database which are semantically or statistically guaranteed to happen, as it adds unneeded overhead without any use.
+\subsubsection{Semantic Constraints}
+Constraints that are guaranteed to happen based on the physical meaning of the database, like :
+\begin{itemize}
+     \item Our database includes a gender field that can be only males and females, so no need to specify that :
+     \begin{verbatim}
+     Person.gender IN (0,1)
+     \end{verbatim}
+     \item If we need to retrieve all not recent Incidents that happened before 5 years at least and are reviewed by not recent government representatives that started their job before 5 years at least, no need to mention both, as for sure if an incident happened say 6 years ago, it's guaranteed that its government representative reviewed it 6 years ago, so it's guaranteed that he/she is not recent as well.
+     Use :
+     \begin{verbatim}
+     Incident.year > 5
+     \end{verbatim}
+     Instead of:
+     \begin{verbatim}
+     YEAR(Government_Representative.date_of_join) > 5 
+     and Incident.year > 5
+     \end{verbatim}
+\end{itemize}
 
+\subsubsection{Statistic Constraints}
+Constraints that are guaranteed to happen based on the current statistics of the database, like:
+\begin{itemize}
+     \item All Government Representatives are older than 20 years old in the database statistics, so no need for :
+     \begin{verbatim}
+     Government_Representative.age >= 20
+     \end{verbatim}
+     \item All Citizens have trust level up to 10 in the database statistics, so no need for :
+     \begin{verbatim}
+     Citizen.trust_level <= 10
+     \end{verbatim}
+\end{itemize}
 
 \subsection{Used Optimizations in our Queries}
-\input{core/usedOptimizations}
+\subsubsection{Query 1}
+\begin{itemize}
+    \item  Schema Optimization.
+    \item  Memory Optimization.
+    \item  Semantic and Statistic Query Optimization.
+\end{itemize}
 
+\subsubsection{Query 2}
+\begin{itemize}
+    \item  Schema Optimization.
+    \item  Memory Optimization.
+    \item  Index Tuning.
+    \item  Query Rewriting -  OR performs better than UNION in IN conditions.
+    \item  Query Rewriting - UNION ALL is faster than UNION.
+\end{itemize}
 
+\subsubsection{Query 3}
+\begin{itemize}
+    \item  Schema Optimization.
+    \item  Memory Optimization.
+    \item  Index Tuning.
+    \item  Query Rewriting.
+\end{itemize}
+
+\subsubsection{Query 4}
+\begin{itemize}
+    \item  Schema Optimization.
+    \item  Memory Optimization.
+\end{itemize}
+
+\subsubsection{Query 5}
+\begin{itemize}
+    \item  Schema Optimization.
+    \item  Memory Optimization.
+    \item  Semantic and Statistic Query Optimization.
+\end{itemize}
