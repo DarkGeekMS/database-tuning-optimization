@@ -34,7 +34,7 @@ This is a college project on database system tuning and query optimization.
 
 -   [x] Different Sizes of Optimized _SQL_ (10,000 / 100,000 / 1,000,000).
 
--   [ ] Different hardware on Optimized _SQL_.
+-   [x] Different hardware on Optimized _SQL_.
 
 ## Clearing Disk Cache
 
