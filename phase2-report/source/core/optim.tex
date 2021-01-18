@@ -88,6 +88,15 @@ The following database schema shows the optimizations over the old schema. The s
 \end{figure}
 
 \subsection{Memory Optimization}
+In \emph{MySQL}, the memory optimization can be done through changing the memory system variables of the \emph{DBMS} given the same hardware. The system variables can include \texttt{innodb\_buffer\_pool\_size}, \texttt{innodb\_buffer\_pool\_chunk\_size} and \emph{innodb\_buffer\_pool\_instances}. We can, also, switch between the two storage engines of \emph{MySQL}, which are \texttt{INNODB} and \texttt{MyISAM}. \\
+
+We tried both storage engines and discovered that using \texttt{INNODB} gives much better performance based on our database schema. Moreover, we tried to optimize most of the system variables, however some changes are \textbf{prohibited} by \emph{MySQL} and other changes don't affect the performance at all. The only change that results in significant improvement is increasing \texttt{innodb\_buffer\_pool\_size}. \\
+
+So, we can summarize our \emph{memory optimization} as follows :
+\begin{itemize}
+    \item Usage of \texttt{INNODB} as a storage engine, which is much faster.
+    \item Increasing \texttt{INNODB}'s buffer pool size, which is responsible for the amount of memory allocated for \emph{DBMS} operations, from \emph{128MB} to \emph{4GB}.
+\end{itemize}
 
 \subsection{Index Tuning}
 
