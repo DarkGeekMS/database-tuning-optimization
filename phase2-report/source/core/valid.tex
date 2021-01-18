@@ -123,3 +123,41 @@ The following plot shows the different in execution time of each query between o
 \end{figure}
 
 \subsection{Hardware Effect}
+We conducted a hardware comparison between to devices of different specifications. The specifications are as follows :
+\begin{itemize}
+    \item \textbf{Device (1) :}
+    \begin{itemize}
+        \item \textbf{Operating System :} \texttt{Ubuntu 20.04}.
+        \item \textbf{CPU :} \texttt{Intel i5 6600k (4 cores)}.
+        \item \textbf{RAM :} \texttt{16GB}.
+        \item \textbf{Disk Type :} \texttt{HDD}.
+    \end{itemize}
+    \item \textbf{Device (2) :}
+    \begin{itemize}
+        \item \textbf{Operating System :} \texttt{Ubuntu 18.04}.
+        \item \textbf{CPU :} \texttt{Intel i7 4510u (2 cores)}.
+        \item \textbf{RAM :} \texttt{8GB}.
+        \item \textbf{Disk Type :} \texttt{HDD}.
+    \end{itemize}
+\end{itemize}
+
+\begin{tabularx}{\textwidth}{|*{5}{Y|}}
+\hline
+\multirow{2}{*}{Query Number}
+  &\multicolumn{2}{c|}{Before Cache}&\multicolumn{2}{c|}{After Cache}\\
+\cline{2-5}
+  &Device (1) &Device (2) &Device (1) &Device (2) \\
+\hline
+Query 1 &7.89 &12.05 &0.3 &0.39 \\
+\hline
+Query 2 &1.29 &29.16 &0.13 &0.81 \\
+\hline
+Query 3 &0.12 &0.17 &0 &0.03 \\
+\hline
+Query 4 &6.57 &9.27 &0.13 &0.2 \\
+\hline
+Query 5 &2.34 &6.01 &0.19 &0.27 \\
+\hline
+\end{tabularx} \\
+
+Time is measured in \emph{seconds}. We can see that the \textbf{better} the hardware, the \textbf{faster} the query executes, both \emph{with} and \emph{without} disk cache. 
