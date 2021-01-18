@@ -5,7 +5,9 @@
     "content" : "A huge incident has happened in Russia",
     "report_date" : "1986-04-27",
     "incident" : {
-        "date" : "1986-04-26",
+        "year" : 1986,
+        "month" : 4,
+        "day" : 26,
         "description" : "incident textual description",
         "eco_loss" : 1000000,
         "location" : "Russia",
