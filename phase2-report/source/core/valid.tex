@@ -122,6 +122,12 @@ The following plot shows the different in execution time of each query between o
     \label{fig:db-size-2}
 \end{figure}
 
+We can see that \emph{NoSQL} \emph{(MongoDB} is still faster than \emph{MySQL}, except for two queries :
+\begin{itemize}
+    \item \textbf{Query 2 :} the performance is almost the same, this can be due to complex \emph{NoSQL} functions and using indexes in \emph{MySQL}.
+    \item \textbf{Query 3 :} the performance of \emph{MySQL} is even better than \emph{NoSQL}, this is mainly because the query accesses only one relation in \emph{MySQL}.
+\end{itemize}
+
 \subsection{Hardware Effect}
 We conducted a hardware comparison between to devices of different specifications. The specifications are as follows :
 \begin{itemize}
@@ -150,7 +156,7 @@ We conducted a hardware comparison between to devices of different specification
 \hline
 Query 1 &7.89 &12.05 &0.3 &0.39 \\
 \hline
-Query 2 &1.29 &29.16 &0.13 &0.81 \\
+Query 2 &1.29 &5.16 &0.13 &0.21 \\
 \hline
 Query 3 &0.12 &0.17 &0 &0.03 \\
 \hline
